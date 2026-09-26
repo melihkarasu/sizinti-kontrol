@@ -175,20 +175,13 @@ let checkDebounceTimer = null;
             document.getElementById('prefix-preview').innerText = `${prefix} (Yalnızca bu 5 karakter sorgulanır)`;
 
             // 2. Adım: HIBP Range API Sorgusu (Çift Kademeli Güvenli & Yedekli Bağlantı)
+            // Standalone: Doğrudan HIBP k-Anonymity API (CORS-açık, şifrenin yalnızca SHA-1 öneki gönderilir)
             let text = '';
-            try {
-              const res = await fetch(`/api/security/pwned-range?prefix=${prefix}`);
-              if (!res.ok) throw new Error('Proxy hatası: ' + res.status);
-              text = await res.text();
-            } catch(proxyErr) {
-              // Failover (Yedekli Hat): Sunucu proxy'si 502 veya timeout verirse doğrudan HIBP genel açık API'sini sorgula
-              console.warn('Dahili proxy yanıt vermedi, doğrudan HIBP k-Anonymity API sorgulanıyor...', proxyErr);
-              const directRes = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`, {
-                headers: { 'Add-Padding': 'true' }
-              });
-              if (!directRes.ok) throw new Error('Sızıntı doğrulama servisine erişilemedi');
-              text = await directRes.text();
-            }
+            const directRes = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`, {
+              headers: { 'Add-Padding': 'true' }
+            });
+            if (!directRes.ok) throw new Error('Sızıntı doğrulama servisine erişilemedi');
+            text = await directRes.text();
 
             // 3. Adım: Yerel Eşleştirme (Kalan 35 Karakter)
             const lines = text.split('\n');
@@ -273,8 +266,10 @@ let checkDebounceTimer = null;
             const prefix = hash.substring(0, 5);
             const suffix = hash.substring(5);
 
-            // Sunucu üzerinden güvenli proxy isteği (prefix doğrulamalı)
-            const res = await fetch(`/api/security/pwned-range?prefix=${prefix}`);
+            // Standalone: Doğrudan HIBP k-Anonymity API (CORS-açık)
+            const res = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`, {
+              headers: { 'Add-Padding': 'true' }
+            });
             const text = await res.text();
 
             const lines = text.split('\n');
