@@ -20,7 +20,6 @@ HaveIBeenPwned k-Anonymity (SHA-1) protokolü ile sıfır bilgi garantili şifre
 - **API Source:** Have I Been Pwned API
 
 ## 🏆 Krediler & Açık Kaynak Teşekkürleri
-- **[Public APIs](https://github.com/public-apis/public-apis):** Uygulamanın kullandığı açık kaynak API ekosistemi için teşekkürler.
 - **[OpenClaw](https://github.com/openclaw/openclaw):** Proje mimarisi ve otonom deployment.
 - **[Google Gemini](https://github.com/google-gemini):** Kodlama ve istemci tarafı optimizasyonları.
 - **[VoltAgent / awesome-design-md](https://github.com/VoltAgent/awesome-design-md):** Mistral AI Tasarım Sistemi.
